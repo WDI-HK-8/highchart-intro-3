@@ -23,17 +23,31 @@ $(document).ready(function(){
           dataWeekly.push(dataPoint);
         })
 
+        // convert to chronological order
         dataWeekly = dataWeekly.reverse()
 
+        console.log(dataWeekly);
+
+        var monthlySum = 0;
+        var quarterlySum = 0;
+        var yearlySum = 0;
+
         for (var i = 0; i < dataWeekly.length; i++) {
-            if(i % 4 === 0) { // index is mod(4) = 0
-                dataMonthly.push(dataWeekly[i]);
+            monthlySum += dataWeekly[i].y;
+            quarterlySum += dataWeekly[i].y;
+            yearlySum += dataWeekly[i].y;
+
+            if(i % 4 === 0) { // mod(4) = 0
+                dataMonthly.push({x: dataWeekly[i].x, y: monthlySum / 4});
+                monthlySum = 0;
             }
-            if(i % 13 === 0) { // index is mod(13) = 0
-                dataQuarterly.push(dataWeekly[i]);
+            if(i % 13 === 0) { // mod(13) = 0
+                dataQuarterly.push({x: dataWeekly[i].x, y: quarterlySum / 13});
+                quarterlySum = 0;
             }
-            if(i % 52 === 0) { // index is mod(52) = 0
-                dataYearly.push(dataWeekly[i]);
+            if(i % 52 === 0) { // mod(52) = 0
+                dataYearly.push({x: dataWeekly[i].x, y: yearlySum / 52});
+                yearlySum = 0;
             }
         }
 
@@ -50,10 +64,10 @@ $(document).ready(function(){
   function initializeHighChart(){
     $('#chart').highcharts({
       title: {
-        text: 'Historical Temperatures'
+        text: 'Historical Gasoline Prices'
       },
       subtitle: {
-        text: 'openweathermap.org'
+        text: 'quandl'
       },
       xAxis: {
         type: 'datetime'
