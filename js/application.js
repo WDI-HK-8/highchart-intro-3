@@ -15,12 +15,12 @@ $(document).ready(function(){
       for (var j = 0; j < days; j++){
         sum += dataWeekly[i+j].y;
       }
-      data.push({x: dataWeekly[i].x ,y: sum / days})
+      data.push({ x: dataWeekly[i].x, y: sum / days })
       sum = 0;
     }
   }
 
-  function getTemp(url){
+  function getPrice(url){
     $.ajax({
       type: 'GET',
       url: url,
@@ -50,7 +50,7 @@ $(document).ready(function(){
     });
   }
 
-  getTemp(url);
+  getPrice(url);
 
   function initializeHighChart(){
     $('#chart').highcharts({
