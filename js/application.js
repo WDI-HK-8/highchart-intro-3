@@ -23,31 +23,34 @@ $(document).ready(function(){
           dataWeekly.push(dataPoint);
         })
 
-        // convert to chronological order
-        dataWeekly = dataWeekly.reverse()
-
-        console.log(dataWeekly);
-
         var monthlySum = 0;
         var quarterlySum = 0;
         var yearlySum = 0;
 
-        for (var i = 0; i < dataWeekly.length; i++) {
-            monthlySum += dataWeekly[i].y;
-            quarterlySum += dataWeekly[i].y;
-            yearlySum += dataWeekly[i].y;
+        for (var i = 0; i < dataWeekly.length; i++) {   
 
-            if(i % 4 === 0) { // mod(4) = 0
-                dataMonthly.push({x: dataWeekly[i].x, y: monthlySum / 4});
-                monthlySum = 0;
+            if (i < dataWeekly.length - 4){
+              for (var j = 0; j < 4; j++){
+                monthlySum += dataWeekly[i+j].y;
+              }
+              dataMonthly.push({x: dataWeekly[i].x ,y: monthlySum / 4})
+              monthlySum = 0;
             }
-            if(i % 13 === 0) { // mod(13) = 0
-                dataQuarterly.push({x: dataWeekly[i].x, y: quarterlySum / 13});
-                quarterlySum = 0;
+
+            if (i < dataWeekly.length - 13){
+              for (var j = 0; j < 13; j++){
+                quarterlySum += dataWeekly[i+j].y;
+              }
+              dataQuarterly.push({x: dataWeekly[i].x ,y: quarterlySum / 13})
+              quarterlySum = 0;
             }
-            if(i % 52 === 0) { // mod(52) = 0
-                dataYearly.push({x: dataWeekly[i].x, y: yearlySum / 52});
-                yearlySum = 0;
+
+            if (i < dataWeekly.length - 52){
+              for (var j = 0; j < 52; j++){
+                yearlySum += dataWeekly[i+j].y;
+              }
+              dataYearly.push({x: dataWeekly[i].x ,y: yearlySum / 52})
+              yearlySum = 0;
             }
         }
 
@@ -87,19 +90,19 @@ $(document).ready(function(){
       },
       series: [{
         name: 'Weekly',
-        data: dataWeekly
+        data: dataWeekly.reverse()
       },
       {
         name: 'Monthly',
-        data: dataMonthly
+        data: dataMonthly.reverse()
       },
       {
         name: 'Quarterly',
-        data: dataQuarterly
+        data: dataQuarterly.reverse()
       },
       {
         name: 'Yearly',
-        data: dataYearly
+        data: dataYearly.reverse()
       }]
     });
   }
