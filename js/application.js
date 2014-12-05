@@ -5,7 +5,20 @@ $(document).ready(function(){
   var dataMonthly = [];
   var dataQuarterly = [];
   var dataYearly = [];
+  var monthlySum = 0;
+  var quarterlySum = 0;
+  var yearlySum = 0;
   var url = 'https://www.quandl.com/api/v1/datasets/BTS_MM/RETAILGAS.json?trim_start=1995-01-02&trim_end=2012-10-15&auth_token=E6kNzExHjay2DNP8pKvB';
+
+  function calcSMA(dataWeekly, data, sum, days, i){
+    if (i < dataWeekly.length - days){
+      for (var j = 0; j < days; j++){
+        sum += dataWeekly[i+j].y;
+      }
+      data.push({x: dataWeekly[i].x ,y: sum / days})
+      sum = 0;
+    }
+  }
 
   function getTemp(url){
     $.ajax({
@@ -23,35 +36,10 @@ $(document).ready(function(){
           dataWeekly.push(dataPoint);
         })
 
-        var monthlySum = 0;
-        var quarterlySum = 0;
-        var yearlySum = 0;
-
         for (var i = 0; i < dataWeekly.length; i++) {   
-
-            if (i < dataWeekly.length - 4){
-              for (var j = 0; j < 4; j++){
-                monthlySum += dataWeekly[i+j].y;
-              }
-              dataMonthly.push({x: dataWeekly[i].x ,y: monthlySum / 4})
-              monthlySum = 0;
-            }
-
-            if (i < dataWeekly.length - 13){
-              for (var j = 0; j < 13; j++){
-                quarterlySum += dataWeekly[i+j].y;
-              }
-              dataQuarterly.push({x: dataWeekly[i].x ,y: quarterlySum / 13})
-              quarterlySum = 0;
-            }
-
-            if (i < dataWeekly.length - 52){
-              for (var j = 0; j < 52; j++){
-                yearlySum += dataWeekly[i+j].y;
-              }
-              dataYearly.push({x: dataWeekly[i].x ,y: yearlySum / 52})
-              yearlySum = 0;
-            }
+            calcSMA(dataWeekly, dataMonthly, monthlySum, 4, i);
+            calcSMA(dataWeekly, dataQuarterly, monthlySum, 13, i);
+            calcSMA(dataWeekly, dataYearly, monthlySum, 52, i);
         }
 
         initializeHighChart();
