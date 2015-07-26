@@ -67,7 +67,7 @@ $(document).ready(function(){
         min: 0.5,
         max: 4.5,
         title: {
-            text: 'Temperature (°K)'
+            text: 'US Dollar ($)'
         }
       },
       legend: {
